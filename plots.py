@@ -8,7 +8,7 @@ print(data.head())
 daily = data["demand_mw"].resample("D").mean()
 
 data["hour"] = data.index.hour
-data["is_weekend"] = data.index.dayofweek >= 5
+data["is_weekend"] = data.index.day_of_week >= 5
 
 avg_day = data.groupby(["is_weekend", "hour"])["demand_mw"].mean()
 avg_day = avg_day.unstack(0)

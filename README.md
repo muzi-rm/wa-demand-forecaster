@@ -1,9 +1,7 @@
 # WA Electricity Demand Forecast
 
 ## CURRENT STATUS
-Still a work in progress, however the data is almost prepared a
-
-## What I've done so far
+Just finished my first model that had an MAPE of 6.8%
 
 ### Data preparation
 
@@ -18,14 +16,14 @@ Then I joined the two dataframes by using the inner parameter, so that if a time
 Throughout I checked for duplicates and null values in the data, but there were none
 
 
-# TEMPERATURE VS DEMAND GRAPH
+## TEMPERATURE VS DEMAND GRAPH
 To discover the features for the model I put temperature against demand to see if the temperature of the day affects the electricity demand. This produced a tick shape, where many things were revealed:
 
 - The highest demand tends to come from the highest temperatures, assumingly due to air-conditioning, and the second highest demand comes from lower temperatures, assumingly due to heating, whereas the lowest demand comes from neutral temperatures. 
 
 - Most days in Perth experience 15 - 25 degrees
 
-# TIME OF DAY GRAPH
+## TIME OF DAY GRAPH
 
 However there was another hypothesis, where the time of day affected the demand aswell, and after making each dot have a colour reflecting the time of day it was evident it did:
 
@@ -34,18 +32,36 @@ However there was another hypothesis, where the time of day affected the demand 
 
 Thi confirms that the temperature and the time are both features in what causes demand of electricity
 
-# WEEKEND VS WEEKDAY GRAPH
+## WEEKEND VS WEEKDAY GRAPH
 
 To see whether the weekend or weeday affected the demand, I created a graph, which showed a clear difference
 
 - there seems to be the largest difference, meaning that the airconditioning and electricity use in workplaces and schools seems to be higher than at home
 - The evening time is also higher on weekdays, assumingly because people are out more at evening at dinners or events on weekends.
 
-# SAME AS YESTERDAY MODEL
+## SAME AS YESTERDAY MODEL
 I have built a same as yesterday and same as last week model to use as my baseline to improve from with my future trained models
 
 The 'same as yesterday' score to beat is: 8.9%
 The 'same as last week' score to beat is: 12.3%
+
+## MODEL
+
+The model I used is a gradient boosted tree model, in which I used scikit-learn's HistGradientBoostingRegressor. This builds many small decision trees that correct the mistakes of the ones before.
+
+It uses the features temperature, hour, weekend or weekday, month, yesterday's demand and last week's demand. These features were discovered through patterns i found when looking at the data. I separated the table by date to get the training data from 2019 to 2022 and the testing data from 2023.
+
+| Forecast | Average error (MAPE) |
+|---|---|
+| Same as last week | 12.3% |
+| Same as yesterday | 8.9% |
+| **My model** | **6.8%** |
+
+The model achieved a 6.8% MAPE, which beats the 'same_as_yesterday' and 'same_as_last_week' baselines, where it achieved about a 24% less error than the best performing baseline. This is due to the ability to use the findings it made through training. It can identify the pattern that weekdays tend to have a higher demand, and therefore when it is predicting Monday's demand with the test data, it uses that knowledge, rather than just using the Sunday's demand as a prediction.
+
+However, my model has the upper hand as I can use the temperature of the day when predicting the demand which can result in a slightly more accurate prediction, whereas in real life models have to go off of forecasts, which may have slight inaccuracies.
+
+Real life models utilise a broader range of data, such as public holidays and solar panel usage estimates, which I have not included into my features as of yet.
 
 ## IDEAS TO TEST
 
