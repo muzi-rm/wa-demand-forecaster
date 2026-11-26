@@ -1,5 +1,6 @@
 import pandas as pd
 from sklearn.ensemble import HistGradientBoostingRegressor
+import matplotlib.pyplot as plt
 
 data = pd.read_csv("data/processed/hourly.csv", index_col="time", parse_dates=True)
 
@@ -41,3 +42,24 @@ predictions = model.predict(X_test)
 error_model = (abs(y_test - predictions)/y_test).mean()*100
 
 print(f"Model:             {error_model:.1f}% average error")
+
+results = test[["demand_mw"]].copy()
+results["forecast"] = predictions
+results["error_pct"] = abs(results["demand_mw"] - results["forecast"])/results["demand_mw"] * 100
+
+print(results.head())
+
+week = results.loc["2023-02-06":"2023-02-12"]
+week[["demand_mw", "forecast"]].plot(figsize=(12,4))
+plt.title("Forecast vs actual demand, 6–12 Feb 2023")
+plt.ylabel("Demand (MW)")
+plt.show()
+
+results["hour"] = results.index.hour
+results["is_weekend"] = results.index.day_of_week >= 5
+
+print("Average error by hour:")
+print(results.groupby("hour")["error_pct"].mean().round(1))
+
+print("Average error, weekday vs weekend:")
+print(results.groupby("is_weekend")["error_pct"].mean().round(1))

@@ -63,6 +63,24 @@ However, my model has the upper hand as I can use the temperature of the day whe
 
 Real life models utilise a broader range of data, such as public holidays and solar panel usage estimates, which I have not included into my features as of yet.
 
+## WHERE THE MODEL GOES WRONG
+
+| Time of day | Average error |
+|---|---|
+| Overnight (12am-5am) | 2.3-2.9% |
+| Evening (5pm-11pm) | 2.6-4.3% |
+| Midday (10am-2pm) | 14-18% |
+
+Weekdays: 6.6% . Weekends: 7.1%
+
+![Forecast vs actual demand for one week](images/forecast_vs_actual_week.png)
+
+I needed to see what was causing the model to have the remaining MAPE, and where it could be fixed, so to do that I tested my idea of it being the type of day, where the sunnyness/cloudiness of the day has an affect on the use of electricity.
+
+When a day is cloudy, solar panles generate less energy, which means an increase on the overall demand. However, this wasn't detectable by the model as there was no weather forecast data in the training.
+
+This leads me to think that this is the likely cause of the midday errors, so I will add cloud cover as a feature in my next model.
+
 ## IDEAS TO TEST
 
 - After looking at the demand vs temperature plot, there is a large vertical spread around 15 - 25 degrees, and my belief is that it could also be the type of day aswell, because you can have 20 degree days in almost all seasons, yet the humidity, windyness etc all affect how the temperature feels.
